@@ -1,0 +1,187 @@
+0: kd> !process 0 0
+**** NT ACTIVE PROCESS DUMP ****
+PROCESS fffffa80024640c0
+    SessionId: none  Cid: 0004    Peb: 00000000  ParentCid: 0000
+    DirBase: 00187000  ObjectTable: fffff8a000003000  HandleCount: <Data Not Accessible>
+    Image: System
+
+PROCESS fffffa800375e600
+    SessionId: none  Cid: 012c    Peb: 7f791a8b000  ParentCid: 0004
+    DirBase: 32a9b000  ObjectTable: fffff8a00037a580  HandleCount: <Data Not Accessible>
+    Image: smss.exe
+
+PROCESS fffffa8003655080
+    SessionId: 0  Cid: 0194    Peb: 7f649a9f000  ParentCid: 0188
+    DirBase: 0a460000  ObjectTable: fffff8a000113580  HandleCount: <Data Not Accessible>
+    Image: csrss.exe
+
+PROCESS fffffa8002548940
+    SessionId: 0  Cid: 01d0    Peb: 7f77082b000  ParentCid: 0188
+    DirBase: 08ae6000  ObjectTable: fffff8a0003a36c0  HandleCount: <Data Not Accessible>
+    Image: wininit.exe
+
+PROCESS fffffa8002548080
+    SessionId: 1  Cid: 01d8    Peb: 7f7916f4000  ParentCid: 012c
+    DirBase: 030e8000  ObjectTable: 00000000  HandleCount:   0.
+    Image: smss.exe
+
+PROCESS fffffa8002543940
+    SessionId: 1  Cid: 01ec    Peb: 7f649b87000  ParentCid: 01d8
+    DirBase: 03237000  ObjectTable: fffff8a0003b0140  HandleCount: <Data Not Accessible>
+    Image: csrss.exe
+
+PROCESS fffffa8003dff080
+    SessionId: 1  Cid: 020c    Peb: 7f7ea8f8000  ParentCid: 01d8
+    DirBase: 013bd000  ObjectTable: fffff8a003546400  HandleCount: <Data Not Accessible>
+    Image: winlogon.exe
+
+PROCESS fffffa80040d8080
+    SessionId: 0  Cid: 0254    Peb: 7f7d53a9000  ParentCid: 01d0
+    DirBase: 0e389000  ObjectTable: fffff8a000a5ba80  HandleCount: <Data Not Accessible>
+    Image: services.exe
+
+PROCESS fffffa8004100940
+    SessionId: 0  Cid: 025c    Peb: 7f6aa126000  ParentCid: 01d0
+    DirBase: 0ec11000  ObjectTable: fffff8a000a2e8c0  HandleCount: <Data Not Accessible>
+    Image: lsass.exe
+
+PROCESS fffffa80041ed340
+    SessionId: 0  Cid: 02b4    Peb: 7f7a20aa000  ParentCid: 0254
+    DirBase: 10c80000  ObjectTable: fffff8a000b5e780  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa80040d0940
+    SessionId: 0  Cid: 02e4    Peb: 7f7a2bbf000  ParentCid: 0254
+    DirBase: 11797000  ObjectTable: fffff8a000bc4d00  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004a28940
+    SessionId: 0  Cid: 033c    Peb: 7f7a2348000  ParentCid: 0254
+    DirBase: 122a7000  ObjectTable: fffff8a000b87c00  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004a9f080
+    SessionId: 1  Cid: 0360    Peb: 7f7d460f000  ParentCid: 020c
+    DirBase: 1251c000  ObjectTable: 00000000  HandleCount:   0.
+    Image: LogonUI.exe
+
+PROCESS fffffa8004a9c080
+    SessionId: 1  Cid: 0368    Peb: 7f70692f000  ParentCid: 020c
+    DirBase: 125a7000  ObjectTable: fffff8a000c4f800  HandleCount: <Data Not Accessible>
+    Image: dwm.exe
+
+PROCESS fffffa8004b1f940
+    SessionId: 0  Cid: 03b4    Peb: 7f7a216f000  ParentCid: 0254
+    DirBase: 141c8000  ObjectTable: fffff8a000d92f00  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004b45340
+    SessionId: 0  Cid: 03e8    Peb: 7f7a2d36000  ParentCid: 0254
+    DirBase: 14d52000  ObjectTable: fffff8a000db0040  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004b65740
+    SessionId: 0  Cid: 019c    Peb: 7f7a2943000  ParentCid: 0254
+    DirBase: 153b6000  ObjectTable: fffff8a000dcaf00  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004b6e940
+    SessionId: 0  Cid: 03c4    Peb: 7f7a2dea000  ParentCid: 0254
+    DirBase: 16604000  ObjectTable: fffff8a000e41980  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004c96940
+    SessionId: 0  Cid: 0478    Peb: 7f7f7045000  ParentCid: 0254
+    DirBase: 0e876000  ObjectTable: fffff8a000f11d80  HandleCount: <Data Not Accessible>
+    Image: spoolsv.exe
+
+PROCESS fffffa8004c9d380
+    SessionId: 0  Cid: 049c    Peb: 7f7a2727000  ParentCid: 0254
+    DirBase: 18959000  ObjectTable: fffff8a000f1c1c0  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004d35940
+    SessionId: 0  Cid: 0550    Peb: 7f7a5dbe000  ParentCid: 019c
+    DirBase: 1ab99000  ObjectTable: fffff8a00102d240  HandleCount: <Data Not Accessible>
+    Image: dasHost.exe
+
+PROCESS fffffa8004d5f940
+    SessionId: 0  Cid: 0584    Peb: 7f63c06e000  ParentCid: 0254
+    DirBase: 1b188000  ObjectTable: fffff8a001081f00  HandleCount: <Data Not Accessible>
+    Image: MsMpEng.exe
+
+PROCESS fffffa8004dc0300
+    SessionId: 0  Cid: 05e0    Peb: 7f7a050e000  ParentCid: 0254
+    DirBase: 1bd19000  ObjectTable: fffff8a001118d40  HandleCount: <Data Not Accessible>
+    Image: vmtoolsd.exe
+
+PROCESS fffffa8004eb4940
+    SessionId: 0  Cid: 06c0    Peb: 7f7a3084000  ParentCid: 0254
+    DirBase: 1f3a3000  ObjectTable: fffff8a00111a240  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8005c16940
+    SessionId: 0  Cid: 0804    Peb: 7f7a22df000  ParentCid: 0254
+    DirBase: 28b34000  ObjectTable: fffff8a001334500  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+
+PROCESS fffffa8004f3c940
+    SessionId: 0  Cid: 08d0    Peb: 7f65587d000  ParentCid: 0254
+    DirBase: 303a3000  ObjectTable: fffff8a001335140  HandleCount: <Data Not Accessible>
+    Image: dllhost.exe
+
+PROCESS fffffa8005cf7940
+    SessionId: 0  Cid: 096c    Peb: 7f6da5ce000  ParentCid: 0254
+    DirBase: 2b454000  ObjectTable: fffff8a00142d3c0  HandleCount: <Data Not Accessible>
+    Image: msdtc.exe
+
+PROCESS fffffa800505c400
+    SessionId: 0  Cid: 0b4c    Peb: 7f71dd8d000  ParentCid: 02b4
+    DirBase: 313ee000  ObjectTable: fffff8a0014b6d80  HandleCount: <Data Not Accessible>
+    Image: WmiPrvSE.exe
+
+PROCESS fffffa80050b5940
+    SessionId: 0  Cid: 0b78    Peb: 7f655cb9000  ParentCid: 02b4
+    DirBase: 2b073000  ObjectTable: fffff8a001512f00  HandleCount: <Data Not Accessible>
+    Image: dllhost.exe
+
+PROCESS fffffa800350a080
+    SessionId: 1  Cid: 00f8    Peb: 7f7076da000  ParentCid: 0254
+    DirBase: 0fd2f000  ObjectTable: fffff8a0016c3040  HandleCount: <Data Not Accessible>
+    Image: taskhostex.exe
+
+PROCESS fffffa80030a8940
+    SessionId: 1  Cid: 0074    Peb: 7f79464f000  ParentCid: 0518
+    DirBase: 01da1000  ObjectTable: fffff8a001a4a700  HandleCount: <Data Not Accessible>
+    Image: explorer.exe
+
+PROCESS fffffa8002896080
+    SessionId: 0  Cid: 0c34    Peb: 7f60d4be000  ParentCid: 0254
+    DirBase: 0f774000  ObjectTable: fffff8a001b2b440  HandleCount: <Data Not Accessible>
+    Image: SearchIndexer.exe
+
+PROCESS fffffa8002a1c6c0
+    SessionId: 1  Cid: 0dc8    Peb: 7f656c3f000  ParentCid: 0074
+    DirBase: 2932b000  ObjectTable: fffff8a001d30440  HandleCount: <Data Not Accessible>
+    Image: VMwareTray.exe
+
+PROCESS fffffa8002a33940
+    SessionId: 1  Cid: 0dd4    Peb: 7f79fbef000  ParentCid: 0074
+    DirBase: 31539000  ObjectTable: fffff8a001bf9e00  HandleCount: <Data Not Accessible>
+    Image: vmtoolsd.exe
+
+PROCESS fffffa8002a105c0
+    SessionId: 0  Cid: 0f30    Peb: 7f6a6066000  ParentCid: 0254
+    DirBase: 15819000  ObjectTable: fffff8a001dd6b80  HandleCount: <Data Not Accessible>
+    Image: wmpnetwk.exe
+
+PROCESS fffffa8002838840
+    SessionId: 0  Cid: 0a80    Peb: 7f7baa5f000  ParentCid: 0254
+    DirBase: 11d72000  ObjectTable: fffff8a002262580  HandleCount: <Data Not Accessible>
+    Image: VSSVC.exe
+
+PROCESS fffffa800297c940
+    SessionId: 0  Cid: 0f6c    Peb: 7f7a2b5d000  ParentCid: 0254
+    DirBase: 3777f000  ObjectTable: fffff8a002086cc0  HandleCount: <Data Not Accessible>
+    Image: svchost.exe
+

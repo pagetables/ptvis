@@ -1,0 +1,4 @@
+Use the binvis utility:
+
+./binvis -t square -c ARM armdump.txt -s 1024  #creates a 1024x1024 pic named armdump.png
+#default mapping is hilbert, but others exist (see the -m option)

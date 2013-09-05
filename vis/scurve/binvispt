@@ -1,0 +1,558 @@
+#!/usr/bin/env python
+import os.path, math, string, sys
+import scurve
+from scurve import progress, utils, draw
+import Image, ImageDraw
+import pt
+import struct
+
+def getPageColors(page):
+
+  color = [0, 0, 0 ] #black by default
+  
+  # readable ->   GRAY
+  
+  # writable ->   RED
+  
+  # executable -> BLUE
+  
+  # WX -> PURPLE
+
+  if page.read_user:
+    color = [0xD3, 0xD3, 0xD3] #light gray
+  elif page.read_super:
+    color = [0x77, 0x88, 0x99] #light slate gray
+
+  if page.write_user:
+    color = [0xFF, 0xB6, 0xC1] #light pink
+    if page.execute_user:
+      color = [0x8b, 0x00, 0x8b] #dark magenta
+    elif page.execute_super:
+      color = [0x99, 0x32, 0xcc] #dark orchid            
+  elif page.write_super:
+    color = [0xFF, 0x14, 0x93] #write suser is deep pink
+    if page.execute_super or page.execute_user:
+      color = [0x94, 0x00, 0xd3] #RWX is  dark violet
+  elif page.execute_user:
+    color = [0x00, 0x00, 0x8B] #dark blue
+  elif page.execute_super:
+    color = [0x00, 0xBF, 0xFF] #bright deep sky blue
+  
+  return color  
+
+class _Color:
+    def __init__(self, data, block):
+        self.data, self.block = data, block
+        s = list(set(data))
+        s.sort()
+        self.symbol_map = {v : i for (i, v) in enumerate(s)}
+
+    def __len__(self):
+        return len(self.data)
+
+    def point(self, x):
+        if self.block and (self.block[0]<=x<self.block[1]):
+            return self.block[2]
+        else:
+            return self.getPoint(x)
+
+
+class ColorGradient(_Color):
+    def getPoint(self, x):
+        c = ord(self.data[x])/255.0
+        return [
+            int(255*c),
+            int(255*c),
+            int(255*c)
+        ]
+
+
+class ColorHilbert(_Color):
+    def __init__(self, data, block):
+        _Color.__init__(self, data, block)
+        self.csource = scurve.fromSize("hilbert", 3, 256**3)
+        self.step = len(self.csource)/float(len(self.symbol_map))
+
+    def getPoint(self, x):
+        c = self.symbol_map[self.data[x]]
+        return self.csource.point(int(c*self.step))
+
+
+class ColorClass(_Color):
+    def getPoint(self, x):
+        c = ord(self.data[x])
+        if c == 0:
+            return [0, 0, 0]
+        elif c == 255:
+            return [255, 255, 255]
+        elif chr(c) in string.printable:
+            return [55, 126, 184]
+        return [228, 26, 28]
+
+
+class ColorEntropy(_Color):
+    def getPoint(self, x):
+        e = utils.entropy(self.data, 256, x, len(self.symbol_map))
+        # http://www.wolframalpha.com/input/?i=plot+%284%28x-0.5%29-4%28x-0.5%29**2%29**4+from+0.5+to+1
+        def curve(v):
+            f = (4*v - 4*v**2)**4
+            f = max(f, 0)
+            return f
+        r = curve(e-0.5) if e > 0.5 else 0
+        b = e**2
+        return [
+            int(255*r),
+            0,
+            int(255*b)
+        ]
+
+class x86_64_PT(_Color):
+    def __init__(self, data, block):
+        _Color.__init__(self, "", block)
+        self.pages = pt.parse_ia32e(data)
+        self.keys = self.pages.keys()
+        self.keys.sort()
+
+        #add 0 as the starting point
+        args = {}
+        args["start"] = 0
+        args["end"] = self.pages[self.keys[0]].start
+        args["read_user"] = False
+        args["read_super"] = False
+        args["write_user"] = False
+        args["write_super"] = False
+        args["execute_user"] = False
+        args["execute_super"] = False
+        self.pages[0] = pt.Page(args)
+        
+        #reset keys
+        self.keys = self.pages.keys()
+        self.keys.sort()
+
+        #add spaces for unmapped pages now
+        for i in range(0, len(self.keys)-1, 1):
+          pA = self.pages[self.keys[i]]
+          #print hex(pA.start)
+          if pA.start < 0xffff000000000000:
+            continue
+          pB = self.pages[self.keys[i+1]]
+          gap = pB.start - pA.end
+          next = pA.end
+          if gap > 0:
+            #split the gap into 2megabyte boundaries
+            count = 0
+            unit = 1024*1024*2
+
+            limi = 100000
+            try:
+              for i in xrange(0, gap, unit):
+                args = {}
+                if 0: #count > limi: #maximum 100000 entries, at this point stop 
+                  print 'hit count limit'
+                  args["end"] = pB.end
+                else:
+                  args["end"] = next + i + unit
+
+                args["start"] = next + i
+                args["read_user"] = False
+                args["read_super"] = False
+                args["write_user"] = False
+                args["write_super"] = False
+                args["execute_user"] = False
+                args["execute_super"] = False
+                self.pages[pA.end+i] = pt.Page(args)
+                if count > limi: break
+                count += 1
+            except:
+                print 'fail', gap, hex(pA.start)
+                continue
+
+        #reset keys
+        self.keys = self.pages.keys()
+        self.keys.sort()
+            
+        self.shift = 12
+    
+    def getPage(self, addr):
+      if addr in self.pages:
+        return self.pages[addr]
+      return None
+  
+    def getPoint(self, x):
+        
+        #shift the address being searched for
+        #x = x << self.shift
+        orig = x
+        x = self.keys[x]
+        # print hex(x), x
+        # 
+        # x is the address to look up and get a color for
+        #
+        if x in self.pages:
+          page = self.pages[x]
+        else:
+          #check if there is an entry on the 2MB boundary
+          m2 = ((x>>21)<<21)
+          if m2 in self.pages:
+            page = self.pages[x]
+            if page.end < x:
+              page = None
+          else:
+            page = None
+            
+        if not page:
+          return [0,0,0]
+          #raise Exception("invalid address: %x"%(x<<(self.shift-1)))
+
+        color = getPageColors(page)
+ 
+        return color
+
+    def __len__(self):
+        #
+        # at some point, allow specifying the granularity of each pixel. 
+        #
+        #print len(self.pages.keys())
+        return len(self.pages.keys())
+        #
+        # This will sweep the total address space. On IA32.e mode that means
+        # a 48-bit address space. However, the smallest page granularity is 
+        # 12-bits
+        #
+        return (1<<47)/self.window_size
+
+class GENERIC_PT(_Color):
+    def __init__(self, data, block, win_size=4*1024, func=pt.parse_arm, start=0, stop=0):
+        _Color.__init__(self, "", block)
+        self.pages = func(data)
+        self.keys = self.pages.keys()
+        self.keys.sort()
+        self.window_size = win_size
+        
+        print 'parsed pages, windowing now', len(self.pages)
+        #convert to list of window_size entries
+        if not stop:
+          if func == pt.parse_arm:
+            do_len = ((1<<32)/(self.window_size))
+          else:
+            do_len = ((1<<48)/(self.window_size))
+        else:
+          do_len = (stop-start)/self.window_size
+        
+        print 'have %d windows'%do_len
+        self.windows = [[]] * do_len
+        set = 0
+        for page in self.pages:
+          #figure out which window it is in 
+          page = self.pages[page]
+
+          window_addr = page.start
+          #round down to the previous window
+          window_addr = window_addr - (window_addr % self.window_size)
+          
+          #check if window in range
+          if stop != 0:
+            if window_addr < start or window_addr > stop:
+              #skip this as its not in the window
+              continue
+
+          while window_addr < page.end:
+            if stop:
+              idx = (window_addr - start) / self.window_size 
+            else:
+              idx = (window_addr) / self.window_size 
+            if not self.windows[idx]:
+              #make a new entry
+              set += 1
+              #print hex(window_addr)
+              args = {}
+              args["end"] = window_addr + self.window_size
+              args["start"] = window_addr
+              args["read_user"] = page.read_user
+              args["read_super"] = page.read_super
+              args["write_user"] = page.write_user
+              args["write_super"] = page.write_super
+              args["execute_user"] = page.execute_user
+              args["execute_super"] = page.execute_super
+              self.windows[idx] = pt.Page(args)
+            else:
+              if (self.windows[idx].write_super == 0 and page.write_super != 0):
+                self.windows[idx].read_user = page.read_user
+                self.windows[idx].read_super = page.read_super
+                self.windows[idx].write_user = page.write_user
+                self.windows[idx].write_super = page.write_super
+                self.windows[idx].execute_user = page.execute_user
+                self.windows[idx].execute_super = page.execute_super              
+              if (self.windows[idx].write_user == 0 and page.write_user != 0):
+                self.windows[idx].read_user = page.read_user
+                self.windows[idx].read_super = page.read_super
+                self.windows[idx].write_user = page.write_user
+                self.windows[idx].write_super = page.write_super
+                self.windows[idx].execute_user = page.execute_user
+                self.windows[idx].execute_super = page.execute_super              
+              if (self.windows[idx].execute_user == 0 and page.execute_user != 0):
+                self.windows[idx].read_user = page.read_user
+                self.windows[idx].read_super = page.read_super
+                self.windows[idx].write_user = page.write_user
+                self.windows[idx].write_super = page.write_super
+                self.windows[idx].execute_user = page.execute_user
+                self.windows[idx].execute_super = page.execute_super              
+              if (self.windows[idx].read_user == 0 and page.read_user != 0):
+                self.windows[idx].read_user = page.read_user
+                self.windows[idx].read_super = page.read_super
+                self.windows[idx].write_user = page.write_user
+                self.windows[idx].write_super = page.write_super
+                self.windows[idx].execute_user = page.execute_user
+                self.windows[idx].execute_super = page.execute_super              
+              
+            window_addr += self.window_size
+
+        #reset keys
+        print len(self.windows), 'size'
+        print 'set %d windows'%set
+        print 'go, data parsed'
+
+    def getPoint(self, x):
+        if x < len(self.windows):
+          page = self.windows[x]
+        else:
+          page = None
+        if not page:
+          return [0,0,0]
+          #raise Exception("invalid address: %x"%(x<<(self.shift-1)))
+
+        color = getPageColors(page)
+
+        #print 'found page', page, x
+        return color
+
+    def __len__(self):
+        #
+        # at some point, allow specifying the granularity of each pixel. 
+        #
+        #print len(self.pages.keys())
+        #return len(self.pages.keys())
+        #return ((1<<32)/(self.window_size))
+        print 'len', len(self.windows)
+        return len(self.windows)
+
+class x86_64_PTZ(GENERIC_PT):
+    def __init__(self, data, block, window=None, start=0, stop=0):
+      if not window:
+        window = 16*1024
+      GENERIC_PT.__init__(self, data, block, window, pt.parse_ia32e, start, stop)
+      #blah = []
+      empty = 0
+      print len(self.windows)
+
+      for i in xrange(len(self.windows)):
+        break
+        if not self.windows[i]:
+          empty += 1
+        else:
+          print self.windows[i]
+          empty = 0
+        if empty <= 1000:
+          pass #blah += self.windows[i]
+        else:
+          print 'skip'
+          
+      #self.windows = blah
+      #print len(self.windows)
+      
+class ARM_PT(GENERIC_PT):
+  def __init__(self, data, block, window=None, start=0, stop=0x100000000):
+      #do a generic with a 16 kb window size
+      if not window:
+        window = 4 * 1024
+      GENERIC_PT.__init__(self, data, block, window, pt.parse_arm, start, stop)
+  def __len__(self):
+    return (1<<32)/self.window_size
+    
+        
+def drawmap_unrolled(map, size, csource, name, prog):
+    prog.set_target((size**2)*4)
+    map = scurve.fromSize(map, 2, size**2)
+    c = Image.new("RGB", (size, size*4))
+    cd = ImageDraw.Draw(c)
+    step = len(csource)/float(len(map)*4)
+
+    sofar = 0
+    for quad in range(4):
+        for i, p in enumerate(map):
+            off = (i + (quad * size**2))
+            color = csource.point(
+                        int(off * step)
+                    )
+            x, y = tuple(p)
+            cd.point(
+                (x, y + (size * quad)),
+                fill=tuple(color)
+            )
+            if not sofar%100:
+                prog.tick(sofar)
+            sofar += 1
+    c.save(name)
+
+
+def drawmap_square(map, size, csource, name, prog):
+    prog.set_target((size**2))
+    map = scurve.fromSize(map, 2, size**2)
+    c = Image.new("RGB", map.dimensions())
+    cd = ImageDraw.Draw(c)
+    step = len(csource)/float(len(map))
+    for i, p in enumerate(map):
+        color = csource.point(int(i*step))
+        cd.point(tuple(p), fill=tuple(color))
+        if not i%100:
+            prog.tick(i)
+    c.save(name)
+
+
+def main():
+    from optparse import OptionParser, OptionGroup
+    parser = OptionParser(
+                usage = "%prog [options] infile [output]",
+                version="%prog 0.1",
+            )
+    parser.add_option(
+        "-b", "--block", action="store",
+        dest="block", default=None,
+        help="Mark a block of data with a specified color. Format: hexstartaddr:hexendaddr[:hexcolor]"
+    )
+    parser.add_option(
+        "-c", "--color", action="store",
+        type="choice", dest="color", default="class",
+        choices=["64", "64z", "ARM", "class", "hilbert", "entropy", "gradient"],
+        help="Color map."
+    )
+    parser.add_option(
+        "-m", "--map", action="store",
+        type="choice", dest="map", default="hilbert",
+        choices=sorted(scurve.curveMap.keys()),
+        help="Pixel layout map. Can be any supported curve."
+    )
+    parser.add_option(
+        "-n", "--namesuffix", action="store",
+        type="str", dest="suffix", default="",
+        help="Suffix for generated file names. Ignored if destination is specified."
+    )
+    parser.add_option(
+        "-p", "--progress", action="store_true", default=False,
+        dest="progress",
+        help="Don't show progress bar - print the destination file name."
+    )
+    parser.add_option(
+        "-s", "--size", action="store",
+        type="int", dest="size", default=256,
+        help="Image width in pixels."
+    )
+    parser.add_option(
+        "-t", "--type", type="choice",
+        dest="type", default="unrolled",
+        choices=["unrolled", "square"],
+        help="Image aspect ratio - square (1x1) or unrolled (1x4)"
+    )
+    parser.add_option(
+        "-q", "--quiet", action="store_true",
+        dest="quiet", default=False
+    )
+    parser.add_option(
+        "-r", "--range", action="store",
+        dest="range", default=None,
+        help="Choose a block of data to graph. Format: hexstartaddr:hexendaddr[:hexcolor]"
+    )
+    parser.add_option(
+        "-w", "--window", action="store",
+        type="int", dest="window", default=None,
+        help="Choose a window size for each point"
+    )
+    options, args = parser.parse_args()
+    if len(args) not in [1, 2]:
+        parser.error("Please specify input and output file.")
+
+    d = file(args[0]).read()
+    if len(args) == 2:
+        dst = args[1]
+    else:
+        base = os.path.basename(args[0])
+        if "." in base:
+            base, _ = base.rsplit(".", 1)
+        dst = base + options.suffix + ".png"
+
+    if os.path.exists(dst) and len(args) < 2:
+        print >> sys.stderr, "Refusing to over-write '%s'. Specify explicitly if you really want to do this."%dst
+        sys.exit(1)
+
+    block = None
+    if options.block:
+        parts = options.block.split(":")
+        if len(parts) not in [2, 3]:
+            raise ValueError("Invalid block specification.")
+        s, e = int(parts[0], 16), int(parts[1], 16)
+        if len(parts) == 3:
+            c = draw.parseColor(parts[2])
+        else:
+            c = [255, 0, 0]
+        block = (s, e, c)
+
+    range = None
+    if options.range:
+        parts = options.range.split(":")
+        if len(parts) not in [2, 3]:
+            raise ValueError("Invalid range specification.")
+        s, e = int(parts[0], 16), int(parts[1], 16)
+        range = (s, e)
+    
+    if options.window == -1:
+      #calculate an ideal window size for the given range
+      if 'ARM' in options.color:
+        size = 1<<32
+      else:
+        size = 1<<64
+      if range:
+        size = (e-s)
+      
+      pic_size = options.size * options.size
+      options.window = size / pic_size
+      print 'calculated', options.window, options.window/1024/1024, options.window/1024.0/1024.0/1024.0/1024.0
+      
+    if options.color == "64":
+        csource = x86_64_PT(d, block)
+    elif options.color == "64z":
+      if range:
+        csource = x86_64_PTZ(d, block, options.window, range[0], range[1])
+      else:
+        csource = x86_64_PTZ(d, block, options.window)
+    elif options.color == "ARM":
+      if range:
+        csource = ARM_PT(d, block, options.window, range[0], range[1])
+      else:
+        csource = ARM_PT(d, block, options.window)
+    elif options.color == "class":
+        csource = ColorClass(d, block)
+    elif options.color == "hilbert":
+        csource = ColorHilbert(d, block)
+    elif options.color == "gradient":
+        csource = ColorGradient(d, block)
+    else:
+        csource = ColorEntropy(d, block)
+
+
+    if options.progress:
+        print dst
+
+    if options.quiet or options.progress:
+        prog = progress.Dummy()
+    else:
+        prog = progress.Progress(None)
+
+
+    if options.type == "unrolled":
+        drawmap_unrolled(options.map, options.size, csource, dst, prog)
+    elif options.type == "square":
+        drawmap_square(options.map, options.size, csource, dst, prog)
+    prog.clear()
+
+
+main()

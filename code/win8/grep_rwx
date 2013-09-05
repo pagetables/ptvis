@@ -1,0 +1,2 @@
+for((i=2;i<11;i++)); do cd win8${i}; echo $i; grep virt dumps/System | grep S | grep W | grep xd > rwx_maps; cd ../; done
+

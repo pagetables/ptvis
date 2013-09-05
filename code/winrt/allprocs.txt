@@ -1,0 +1,166 @@
+3: kd> dt nt!_KPROCESS 8686b080 Asid PageDirectory
+   +0x01c PageDirectory : 0x8221804a Void
+   +0x024 Asid          : 0
+3: kd> dt nt!_KPROCESS 878beb80 Asid PageDirectory
+   +0x01c PageDirectory : 0xff72c04a Void
+   +0x024 Asid          : 4
+3: kd> dt nt!_KPROCESS 87859a00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff73404a Void
+   +0x024 Asid          : 6
+3: kd> dt nt!_KPROCESS 87e91a00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff73804a Void
+   +0x024 Asid          : 5
+3: kd> dt nt!_KPROCESS 87e99c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff73c04a Void
+   +0x024 Asid          : 0x1f
+3: kd> dt nt!_KPROCESS 87e9ec00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff73004a Void
+   +0x024 Asid          : 0xa
+3: kd> dt nt!_KPROCESS 87edba00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff77804a Void
+   +0x024 Asid          : 0x1a
+3: kd> dt nt!_KPROCESS 87f20900 Asid PageDirectory
+   +0x01c PageDirectory : 0xff77c04a Void
+   +0x024 Asid          : 0xb
+3: kd> dt nt!_KPROCESS 87f31c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff78004a Void
+   +0x024 Asid          : 0x20
+3: kd> dt nt!_KPROCESS 8695c800 Asid PageDirectory
+   +0x01c PageDirectory : 0xff39004a Void
+   +0x024 Asid          : 0x15
+3: kd> dt nt!_KPROCESS 868f6c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff3d004a Void
+   +0x024 Asid          : 0x1e
+3: kd> dt nt!_KPROCESS 86928600 Asid PageDirectory
+   +0x01c PageDirectory : 0xff43c04a Void
+   +0x024 Asid          : 0xd
+3: kd> dt nt!_KPROCESS 86933500 Asid PageDirectory
+   +0x01c PageDirectory : 0xff49404a Void
+   +0x024 Asid          : 0x16
+3: kd> dt nt!_KPROCESS 88417c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff4a004a Void
+   +0x024 Asid          : 0x11
+3: kd> dt nt!_KPROCESS 88406880 Asid PageDirectory
+   +0x01c PageDirectory : 0xff4a404a Void
+   +0x024 Asid          : 0x14
+3: kd> dt nt!_KPROCESS 88405c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeed004a Void
+   +0x024 Asid          : 0x13
+3: kd> dt nt!_KPROCESS 879f3c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeed404a Void
+   +0x024 Asid          : 0x1b
+3: kd> dt nt!_KPROCESS 88411c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeed804a Void
+   +0x024 Asid          : 0x17
+3: kd> dt nt!_KPROCESS 8849dc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeee004a Void
+   +0x024 Asid          : 0x18
+3: kd> dt nt!_KPROCESS 884c3080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeee404a Void
+   +0x024 Asid          : 0x19
+3: kd> dt nt!_KPROCESS 885d7a00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeeec04a Void
+   +0x024 Asid          : 0x1c
+3: kd> dt nt!_KPROCESS 889c6800 Asid PageDirectory
+   +0x01c PageDirectory : 0xfeee804a Void
+   +0x024 Asid          : 0x1d
+3: kd> dt nt!_KPROCESS 88a03080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe14404a Void
+   +0x024 Asid          : 0x24
+3: kd> dt nt!_KPROCESS 869e1c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe14c04a Void
+   +0x024 Asid          : 0x21
+3: kd> dt nt!_KPROCESS 86a95400 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe16404a Void
+   +0x024 Asid          : 0x22
+3: kd> dt nt!_KPROCESS 87452b00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe17804a Void
+   +0x024 Asid          : 0x23
+3: kd> dt nt!_KPROCESS 87460780 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdee004a Void
+   +0x024 Asid          : 0x32
+3: kd> dt nt!_KPROCESS 8754dc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdec804a Void
+   +0x024 Asid          : 0x3c
+3: kd> dt nt!_KPROCESS 87312080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdef004a Void
+   +0x024 Asid          : 0x53
+3: kd> dt nt!_KPROCESS 873b6c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdecc04a Void
+   +0x024 Asid          : 0x60
+3: kd> dt nt!_KPROCESS 87c61a80 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdeec04a Void
+   +0x024 Asid          : 0x68
+3: kd> dt nt!_KPROCESS 86b60c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xff49804a Void
+   +0x024 Asid          : 0x79
+3: kd> dt nt!_KPROCESS 87c22400 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe1c404a Void
+   +0x024 Asid          : 0x8c
+3: kd> dt nt!_KPROCESS 875d0c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdee804a Void
+   +0x024 Asid          : 0xa9
+3: kd> dt nt!_KPROCESS 874b9c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdedc04a Void
+   +0x024 Asid          : 0xad
+3: kd> dt nt!_KPROCESS 873dcc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfded004a Void
+   +0x024 Asid          : 0xba
+3: kd> dt nt!_KPROCESS 86bbda00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdec404a Void
+   +0x024 Asid          : 0xbe
+3: kd> dt nt!_KPROCESS 87356a00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdef404a Void
+   +0x024 Asid          : 0xbf
+3: kd> dt nt!_KPROCESS 87496080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe1bc04a Void
+   +0x024 Asid          : 0x42
+3: kd> dt nt!_KPROCESS 87c65c00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfded404a Void
+   +0x024 Asid          : 0x44
+3: kd> dt nt!_KPROCESS 88b4dc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfded804a Void
+   +0x024 Asid          : 0x48
+3: kd> dt nt!_KPROCESS 89112300 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdcc404a Void
+   +0x024 Asid          : 0x7e
+3: kd> dt nt!_KPROCESS 89222300 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdec004a Void
+   +0x024 Asid          : 0x7f
+3: kd> dt nt!_KPROCESS 89141080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdcf804a Void
+   +0x024 Asid          : 0xa6
+3: kd> dt nt!_KPROCESS 8910bc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdcfc04a Void
+   +0x024 Asid          : 0xb1
+3: kd> dt nt!_KPROCESS 89118080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfde9404a Void
+   +0x024 Asid          : 0xcb
+3: kd> dt nt!_KPROCESS 89224880 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd2004a Void
+   +0x024 Asid          : 0xcc
+3: kd> dt nt!_KPROCESS 89445400 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd2804a Void
+   +0x024 Asid          : 0xd7
+3: kd> dt nt!_KPROCESS 891b6680 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd0404a Void
+   +0x024 Asid          : 0xe1
+3: kd> dt nt!_KPROCESS 89177080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd1c04a Void
+   +0x024 Asid          : 0xe2
+3: kd> dt nt!_KPROCESS 891afa80 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd0004a Void
+   +0x024 Asid          : 0xf6
+3: kd> dt nt!_KPROCESS 893abc00 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd0804a Void
+   +0x024 Asid          : 7
+3: kd> dt nt!_KPROCESS 8955c900 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdcf404a Void
+   +0x024 Asid          : 8
+3: kd> dt nt!_KPROCESS 89231a80 Asid PageDirectory
+   +0x01c PageDirectory : 0xfdd1004a Void
+   +0x024 Asid          : 0x10
+3: kd> dt nt!_KPROCESS 8912b080 Asid PageDirectory
+   +0x01c PageDirectory : 0xfe19404a Void
+   +0x024 Asid          : 0x11
+
