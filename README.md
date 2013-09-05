@@ -4,9 +4,9 @@ Pagetable Visualization Project
 
 credits
 =====
-Alex Radocea
-Georg Wicherski
-Alex Ionescu - Thanks for help w/ windows analysis
+- Alex Radocea
+- Georg Wicherski
+- Alex Ionescu - Thanks for help w/ windows analysis
 
 collaboarting
 =====
